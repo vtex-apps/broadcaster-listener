@@ -51,7 +51,7 @@ export async function notify(ctx: Context, next: () => Promise<any>) {
   const {
     clients: { catalogGraphQL, events },
     clients,
-    state: { IdSku },
+    state: { IdSku, PriceModified, StockModified },
     vtex: { production, logger },
   } = ctx
   const eventPromises = []
@@ -65,7 +65,7 @@ export async function notify(ctx: Context, next: () => Promise<any>) {
   }
   const { sku } = skuResponse
   const filenameSku = providerToVbaseFilename(toSkuProvider(sku.id))
-  let changed = await replaceIfChanged(sku, filenameSku, clients)
+  let changed = (await replaceIfChanged(sku, filenameSku, clients)) || PriceModified || StockModified
   if (changed) {
     logWholeProductAndSku.sku = sku
     eventPromises.push(events.sendEvent('', skuChanged, sku))
