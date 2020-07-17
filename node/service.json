@@ -8,7 +8,15 @@
   "routes": {
     "notify": {
       "path": "/notify",
-      "public": false
+      "public": false,
+      "access": "authorized",
+      "policies": [
+        {
+          "effect": "allow",
+          "actions": ["post"],
+          "principals": ["vrn:apps:*:{{account}}:*:app/vtex.broadcaster@*"]
+        }
+      ]
     }
   }
 }
